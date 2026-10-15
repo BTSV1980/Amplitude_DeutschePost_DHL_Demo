@@ -259,12 +259,13 @@
     var iv = setInterval(function () { if (!document.body.contains(van)) return clearInterval(iv); i = (i + 1) % pts.length; van.style.left = pts[i][0] + '%'; van.style.top = pts[i][1] + '%'; }, 2000);
   }
   function openDeliveryOptions(tn) {
-    track('Delivery Options Viewed', {});
     var opts = [['neighbour', 'Neighbour', 'Name a neighbour who can accept it'], ['drop_off_spot', 'Drop-off spot', 'Garage, terrace or another safe place'],
       ['packstation', 'Packstation', 'Collect it 24/7 at Packstation 112'], ['post_office', 'Post office', 'Collect it at Post office Lindenau']];
     openSheet('<h2 style="margin-top:0">Change delivery</h2><div class="stack">' + opts.map(function (o) {
       return '<button class="choice" data-opt="' + o[0] + '"><span><strong>' + o[1] + '</strong><br><span class="small">' + o[2] + '</span></span></button>';
     }).join('') + '</div>', function (el) {
+      // track after the sheet is in the DOM so guides anchored to [data-opt] find their target
+      track('Delivery Options Viewed', { packstation_activated: state.packstationActivated });
       el.querySelectorAll('[data-opt]').forEach(function (b) {
         b.onclick = function () {
           var opt = b.getAttribute('data-opt');
